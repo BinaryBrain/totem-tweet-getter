@@ -62,7 +62,7 @@ yargs = yargs
 var argv = yargs.argv;
 
 // Show help
-if(argv.help) {
+if (argv.help) {
 	console.log(yargs.help())
 	process.exit(0)
 }
@@ -85,14 +85,14 @@ var filterOptions = {}
 var loc = [6.5560, 46.5015, 6.6614, 46.5548] // Lausanne
 var lausanneGeoloc = argv.lausanne
 
-if(lausanneGeoloc) {
+if (lausanneGeoloc) {
 	filterOptions.locations = loc.join(',')
 }
 
 // Additional tags
 var additionalTags = []
 
-if(argv.tags) {
+if (argv.tags) {
 	additionalTags = additionalTags.concat(argv.tags.trim().split(/\s*[,;\/]\s*/))
 }
 
@@ -106,17 +106,17 @@ if (filterOptions.follow) {
 // Track
 var track
 
-if(argv.track && typeof argv.track === 'string') {
+if (argv.track && typeof argv.track === 'string') {
 	track = argv.track
 	filterOptions.track = track
 } else {
- track = false
+	track = false
 }
 
 // User ID
 var userID
 
-if(argv.userid && (typeof argv.userid === 'string' || typeof argv.userid === 'number')) {
+if (argv.userid && (typeof argv.userid === 'string' || typeof argv.userid === 'number')) {
 	userID = argv.userid
 	filterOptions.follow = userID
 	getStream(filterOptions)
@@ -124,51 +124,49 @@ if(argv.userid && (typeof argv.userid === 'string' || typeof argv.userid === 'nu
 	// Username
 	var username
 
-	if(argv.username && typeof argv.username === 'string') {
+	if (argv.username && typeof argv.username === 'string') {
 		username = argv.username
 	} else {
-	 username = false
+		username = false
 	}
 
-	if(username !== false) {
-		if(username.substring(0, 1) === '@') {
+	if (username !== false) {
+		if (username.substring(0, 1) === '@') {
 			username = username.substring(1)
 		}
 
 		twit.get('https://api.twitter.com/1.1/users/show.json', { screen_name: username }, function (data) {
-			if(data.id) {
+			if (data.id) {
 				userID = data.id
 				filterOptions.follow = userID
 				getStream(filterOptions)
-			}
-			else {
-				console.error("User "+username+" not found")
+			} else {
+				console.error('{ "error: "User "' + username + '" not found" }')
 				process.exit(-1)
 			}
 		})
-	}
-	else {
+	} else {
 		getStream(filterOptions)
 	}
 }
 
 // Get an print the twitter stream
 function getStream(options) {
-	if(verbose) {
+	if (verbose) {
 		console.info("options:", util.inspect(options))
 	}
-	if(!options || Object.keys(options).length === 0) {
-		console.error("ERR:", "no option given to getStream")
+	if (!options || Object.keys(options).length === 0) {
+		console.error('{ "error": "No option given to getStream" }')
 		process.exit(-2)
 	}
 		
-	if(options.track && options.follow) {
+	if (options.track && options.follow) {
 		delete options.track
 	}
 
 	twit.stream('statuses/filter', options, function (stream) {
 		stream.on('data', function (data) {
-			if(data.text === undefined || data.user === undefined || data.user.screen_name === undefined) {
+			if (data.text === undefined || data.user === undefined || data.user.screen_name === undefined) {
 				return;
 			}
 			
@@ -176,8 +174,8 @@ function getStream(options) {
 			var username = data.user.screen_name
 			
 			// check track
-			if(track && !options.track) {
-				if(!checkTrack(tweet, track)) {
+			if (track && !options.track) {
+				if (!checkTrack(tweet, track)) {
 					return
 				}
 			}
@@ -191,7 +189,7 @@ function getStream(options) {
 		});
 		
 		stream.on('error', function (err) {
-			console.error("ERR: "+err)
+			console.error('{ "error": ' + err + ' }')
 
 			// Retry after 5s
 			setTimeout(function () {
@@ -206,14 +204,14 @@ function isInBounds(loc, data) {
 	if (data.coordinates) {
 		return !!geo.pointInPolygon(data.coordinates, boundingBoxToPolygon(loc))
 	}
-	else if(data.geo && data.geo.coordinates) {
+	else if (data.geo && data.geo.coordinates) {
 		var tmp = data.geo.coordinates[0]
 		data.geo.coordinates[0] = data.geo.coordinates[1]
 		data.geo.coordinates[1] = tmp
 		
 		return !!geo.pointInPolygon(data.geo, boundingBoxToPolygon(loc).coordinates)
 	}
-	else if(data.place && data.place.bounding_box) {
+	else if (data.place && data.place.bounding_box) {
 		var box = polygonToBoundingBox(data.place.bounding_box)
 		
 		return (boxIsSmall(box) && isOverlapping(loc, box))
@@ -234,7 +232,7 @@ function boundingBoxToPolygon(box) {
 
 // Convert a GeoJSON polygon to a bounding box
 function polygonToBoundingBox(polygon) {
-	if(polygon.coordinates) {
+	if (polygon.coordinates) {
 		var coords = polygon.coordinates
 		var x1 = Math.min(coords[0][0][0], coords[0][1][0], coords[0][2][0], coords[0][3][0])
 		var x2 = Math.max(coords[0][0][0], coords[0][1][0], coords[0][2][0], coords[0][3][0])
@@ -281,7 +279,7 @@ function checkTrack(tweet, track) {
 	for(var i in tracks) {
 		var track = tracks[i]
 		
-		if(checkAnd(tweet, track)) {
+		if (checkAnd(tweet, track)) {
 			return true
 		}
 	}
@@ -291,7 +289,7 @@ function checkTrack(tweet, track) {
 
 function checkAnd(tweet, track) {
 	for(var j in track) {
-		if(tweet.toLowerCase().indexOf(track[j].toLowerCase()) < 0) {
+		if (tweet.toLowerCase().indexOf(track[j].toLowerCase()) < 0) {
 			return false
 		}
 	}
