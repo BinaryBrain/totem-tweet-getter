@@ -1,12 +1,12 @@
 {
   "name": "tweet-getter",
   "version": "0.1.1",
-  "description": "Fetch some tweets to feed the TOTEM",
+  "description": "Fetch some tweets to feed the totem",
   "main": "app.js",
   "dependencies": {
     "geojson-utils": "^1.0.2",
-    "twitter": "^0.2.13",
-    "yargs": "^1.2.6"
+    "twitter": "^1.4.0",
+    "yargs": "^6.3.0"
   },
   "devDependencies": {},
   "scripts": {
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/fixme-lausanne/totem.git"
+    "url": "https://github.com/BinaryBrain/totem-tweet-getter.git"
   },
   "keywords": [
     "fixme"
@@ -22,9 +22,9 @@
   "author": "BinaryBrain",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/fixme-lausanne/totem/issues"
+    "url": "https://github.com/BinaryBrain/totem-tweet-getter/issues"
   },
-  "homepage": "https://github.com/fixme-lausanne/totem",
+  "homepage": "https://github.com/BinaryBrain/totem-tweet-getter",
   "bin": {
     "tweet-getter": "./index.js"
   }

@@ -56,9 +56,7 @@ yargs = yargs
 	})
 	
 	.check(function (argv) {
-		if (!(argv.track || argv.lausanne || argv.userid || argv.username)) {
-			return false
-		}
+		return (!!argv.track || !!argv.lausanne || !!argv.userid || !!argv.username)
 	})
 	
 var argv = yargs.argv;
